@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Scoped CSS variables and JS</title>
+
+</head>
+<body>
+    <h2> Update CSS variables with <span class="h1">JS</span> </h2>
+    <!--The span element doesn't mean anything on its own,
+         but can be useful when used together with the global attributes
+        , e.g. class, lang, or dir. It represents its children.-->
+        <div class ="controls">
+            <label for="spacing">Spacing:</label> <!--input-->
+            <input type="range" name="spacing" min="10" max="100" value="10" data-sizing="px">
+            <!-- for spacing
+            of min 10 and max of 100 whose type is range as its a range of min and max-->
+
+            <!--we can also use id in place of type-->
+
+            <label for="blur"> Blur:</label>
+            <input type="range" name="blur" min="0" max="25" value="10" data-sizing="px"><!--range for blurr 
+            area-->
+
+            <label for="base"> Base Color:</label>
+            <input type="color" name="baser" value="#ffc600"> <!--for providing clr to the base-->
+           
+        </div>
+        <img src="Bangkok-cover_11th-Mar.jpg">
+
+        <!--CSS-->
+
+        <style>
+        :root{    /*highest variable in CsS*/
+        /*defining variable to use them further*/
+        /* we use -- for variables in css*/
+
+        --base:#ffc600;
+        --spacing:20px;
+        --blur:0px;
+
+
+        }
+
+
+
+        img{
+            /*it basically adds space between the img and the page*/
+
+            padding: var(--spacing);  /*to use variable we add var before the variable name*/
+            /* we are using spaing variable to show that padding is based on the variable spacing*/
+            background:var(--base);
+            filter:blur(var(--blur));
+
+        }
+        .h1{
+            color:var(--base);
+        }
+       body{
+           text-align:center;
+           background: #193549;
+           color:white;
+           font-family: Arial, Helvetica, sans-serif;
+           font-weight:10;
+           font-size: 25px;
+       }
+     .controls{
+         margin-bottom: 50px;
+     }
+     input{
+         width:100px;
+     }
+
+
+
+    </style>
+
+
+
+<!--JAVASCRIPT-->
+
+<!--Now we are going to use javascript to perform changes to the variables of css,so that when the variables 
+are changed then it can be updated also at the same time -->
+
+<script>
+    const inputs= document.querySelectorAll('.controls input');  /*controls input is used to select all the con
+    tent of the page*/
+    /* querySlector return an array to tha console.log.Go and check it  out by copying and pasting the 
+    above statement at the right of =  :) */
+    /*Though its not an array its a nodeList  */
+    /* A nodeList is diffrenet from an array as: an array has all kind of methods dealing with it like map,reduce
+    and many more while NodeList just have a couple of methods like foreach, keys,values etc*/
+    /* just look at the  prototype of each*/
+
+    function handleUpdate(){
+       // console.log(this.value);
+
+       /* Now we will see the suffix variables i.e blur and base-color*/
+       //console.log(this.dataset);  
+       /*this.dataset is  an object that conatains all the specific data attribute 
+       from the specific i.e sizing in this case*/
+       const suffix=this.dataset.sizing || ' ';  //sizing is the attribute we have defined while defining the input type above
+                                       // ||' ' means or nothing
+       // console.log(suffix);  
+       //console.log(this.name); //it will display the name of the input type on which we perform changes
+      
+       //update the changes
+       document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+      
+       //
+       
+       /*if we wont be adding suffix then there wont be any changes occuring beacaue of the 
+       absence of suffix px i.e why we have used a const suffix to grab the suffix out from the sizing variable*/
+
+    }
+    inputs.forEach(input => input.addEventListener('change',handleUpdate));
+    /*update the changed value of the 
+    variable by sliding the bars..It will update the changes at console...Have a look at it ;) */
+      
+    inputs.forEach(input => input.addEventListener('mousemove',handleUpdate));
+
+    /* we have added mouse move so that the changes canalso be updated when mouse is moved*/
+    
+
+
+</script>
+</body>
+</html>

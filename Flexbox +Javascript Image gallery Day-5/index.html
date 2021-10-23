@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   
+    <title>Flex Panel</title>
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+
+    <div class="panels"><!--flex container-->
+        <div class="panel panel1"><!--flex items-->
+            <p>Hey</p>
+            <p>Let's</p>
+            <p>Dance</p>
+        </div>
+
+        
+            <div class="panel panel2">
+                <p>Give</p>
+                <p>take</p>
+                <p>Recieve</p>
+            </div>
+
+            
+                <div class="panel panel3">
+                    <p>Experience</p>
+                    <p>it</p>
+                    <p>Today</p>
+                </div>
+
+                
+                    <div class="panel panel4">
+                        <p>Give</p>
+                        <p>All</p>
+                        <p>You can</p>
+                    </div>
+
+                    
+                        <div class="panel panel5">
+                            <p>Life</p>
+                            <p>in </p>
+                            <p>Motion</p>
+                        </div>
+</div>
+
+    <style>
+        html{
+            box-sizing:border-box;
+            background: #ffc600;
+            font-family:'helvetica neue';
+            font-size:20px;
+            font-weight:200;
+
+        }
+
+        body{
+            margin:0;
+
+        }
+        *, *:before,*:after{
+            box-sizing:inherit;
+        }
+
+
+           .panels{
+               min-height:100vh;
+               overflow:hidden;
+               display:flex;  /* pics will go side by side*/
+
+           }
+        .panel{
+            background: #6b0f9c;
+            box-shadow:inset 0 0 0 5px rgba(255,255,255,0);
+            color:white;
+            text-align: center;
+            align-items: center;
+            /* safari transitioned event propertyName ===flex*/
+            /*Chrome +FF transitioned event.propertyName ===flex.grow*/
+
+            transition:
+            font-size cubic-bezier(0.61,-0.19,0.7,-0.11),  /*we are changing the font size when any pic is clicked*/
+            flex 0.7s cubic-bezier(0.61,-0.19,0.7,-0.11),  /*for 0.07sec*/
+            background 0.2s;
+            font-size:20px;
+            background-size:cover;
+            background-position:center;
+            flex:1;/*to evenly distribute the pics*/
+            /*to display the text at the center */
+            justify-content: center;
+            align-items:center;/*aligned in one line in center*/
+            display:flex;
+            flex-direction: column;/*to align each text vertically*/
+        }
+
+        .panel1{background-image:url(panel10.jpg);}
+        .panel2{background-image:url(panel2.jpg);}
+        .panel3{background-image:url(panel4.jpg);}
+        .panel4{background-image:url(panel3.jpg);}
+        .panel5{background-image:url(panel22.jpg);}
+
+           /*flex children*/             
+        .panel >*{
+            margin:0;
+            width:100%;
+            transition:0.5s;
+           /* border:1px solid red;*/
+            flex:1 0 auto;
+           /*to display in the desire manner*/
+            display:flex;
+            
+            justify-content:center;/*it will display the content of each box at the center of the box*/
+            align-items: center;
+        }
+
+        .panel >*:first-child{
+            transform:translateY(-100%); /* it will display the 1st elemnt at -ve y axis of 100 or it will 
+                           just disapper*/
+
+        }
+        /*to display when it is completely open*/
+        .panel .open-active > *:first-child{
+            transform:translateY(0); }
+
+
+        .panel >*:last-child{
+            transform:translateY(100%); /* it will display the last elemnt at -ve y axis of 100 or it will 
+                           just disapper*/
+                           /*we can remove the transition at inspect to display it again*/
+
+        }
+        panel .open-active > *:last-child{
+            transform:translateY(0); }
+
+         /*2nd child of panel*/
+      .panel p:nth-child(2)
+      {
+          font-size:4em;
+
+      }
+      /*we are styling the second word*/
+      .panel p{
+          text-transform:uppercase;
+          font-family:'Amatic SC',cursive;
+          text-shadow:0 0 4px rgba(0,0,0,0.72), 0 0 0 rgba(0,0,0,4.5);
+          font-size:2em;
+      }
+     
+      .panel.open{
+          font-size: 40px;
+          flex:5;/*when we click on the puc it will increase the size*/
+          
+      }
+/*now we can take off the border as we have done all kind of styling we needed*/
+  
+
+  .cta{
+      color:white;
+      text-decoration: none;
+  }
+
+        
+    </style>
+
+
+<!--JAVASCRIPT-->
+
+<!-- It is used for performing changes when any pic is clicked upon-->
+<script>
+const panels=document.querySelectorAll('.panel');//.panel bcoz we are using it one by one pannel
+
+/*we are listening for a click if it occurs toggleopen is called and use css open and it is opened and then we see for the 
+transitionend calls open active and displays the property*/
+
+panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+
+function toggleOpen()
+{
+    this.classList.toggle('open'); //to open the pic when it is clicked upon
+}
+//toggleopen fun will work when it is clicked
+//we are using toggleopen instead of toggleopen() bcoz we want to just give a reference instead of running it here
+panels.forEach(panel => panel.addEventListener('transitioned', toggleActive));//to print the changes when transi
+//transition occurs(in console.log)
+
+
+function toggleActive(e){
+    console.log(e.propertyName);//it will diplay .panelopen function properties of css
+    if(e.propertyName.includes('flex')){
+        this.classList.toggle('open-active');
+    }
+
+}
+
+//we do not need to specify width for each img bcoz we have flex
+
+
+</script>
+</body>
+</html>

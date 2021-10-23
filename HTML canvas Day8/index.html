@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>HTML5 canvas</title>
+</head>
+<body>
+    <canvas id="draw" width="800" height="800"></canvas>
+    <script>
+    const canvas=document.querySelector('#draw');  
+     const ctx=canvas.getContext('2d');
+     canvas.width=window.innerWidth;
+     canvas.height=window.innerHeight;
+     ctx.strokeStyle='#BADA55';//whenever anything is drawn it needs to be a clr
+     ctx.lineJoin='round';//end with a round line when a line is drawn or we can also use squaredoff
+     ctx.lineCap='round';
+     ctx.lineWidth=0;
+
+     ctx.globalCompositeOperation='multiply';//itt will blend the colour
+     //Can check out the globalCompositeOperation on google
+          let isDrawing =false;//a line is drawn till the time mouse is pressed
+     let lastX=0;
+     let lastY=0;
+     let hue=0;
+     let direction=true;
+     function draw(e)
+     {
+         if(!isDrawing) return;//stop the fun from running when drawing is not being done
+         console.log(e);
+         //using hue
+         ctx.strokeStyle=`hsl(${hue},100%,50%)`;//it will start with 0th clr of hue
+         hue++;//keep on incrementing the value by adding clr
+
+         if(hue>=360) hue=0;
+         //ctx.lineWidth=hue;//line size will change according to the hue size
+         if(ctx.lineWidth>=100 || ctx.lineWidth <=1){//if the linewidth increases to zero it will go to negative
+             //we can change the value as well
+             direction=!direction;
+         }
+         if(direction)//if less then 100 and greater than 1 we are incrementing it
+           ctx.lineWidth++;
+           else ctx.lineWidth--;
+
+
+         ctx.beginPath();//start from
+         ctx.moveTo(lastX,lastY);//we have to move to x axis or y axis 
+         //we need to update after calling draw fun
+         ctx.lineTo(e.offsetX,e.offsetY);//value coming from the current event
+         ctx.stroke();
+//updating x and y axis when drawing fun is completed
+         lastX=e.offsetX;
+         lastY=e.offsetY;
+
+         //OR
+       //  [lastX, lastY] =[e.offsetX,e.offsetY];
+         //till now we are facing a prolem that our line is starting from 0,0 axis therefore go to mousedown fun
+         //and perform the following activities
+
+     }
+     canvas.addEventListener('mousemove',draw);
+     canvas.addEventListener('mousedown',(e)=>{
+         isDrawing=true;
+         [lastX, lastY] =[e.offsetX,e.offsetY];
+         //update X and Y so that it doesnt start from 0,it will put us from where we start
+
+     });
+     
+     canvas.addEventListener('mouseup',() => isDrawing=false);
+     canvas.addEventListener('mouseout',() => isDrawing=true);
+
+     //use mother effing hsl which is used for rainbow to pick a clr
+
+    </script>
+
+    <style>
+        html,body{
+            margin:0;
+
+        }
+    </style>
+    
+</body>
+</html>

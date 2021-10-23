@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+   <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <!-- we'll be using city .jason file i.e an external source to get the cities names including states name 
+and population from an API that we will be fetching-->
+
+
+
+<form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+
+  <!--JAVASCRIPT-->
+<script>
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+ //const f=fetch(endpoint);/* return a promise or a kind of what is returned from this fetch endpoint,it won't
+ //display the data returned*/
+ //console.log(f);
+
+ //Now to return data
+ //fetch(endpoint).then(blob => console.log(blob));//blob is just a variable
+ //it will also not return data,it will return a kind of data i.e it could be an img,html document etc
+ //now blob needs to be converted into JSON not by json.parse bcoz we are recieving a raw data 
+
+
+// fetch(endpoint).then(blob  =>blob);//this blob file includes method called json 
+
+// fetch(endpoint).then(blob  =>blob.json()) .then(data =>console.log(data)); 
+ //this return the actual list after conversion
+
+ const cities=[];//initializing an array
+ //fetch(endpoint).then(blob  =>blob.json()).then(data =>cities=data);//placing the data into cities array
+ //array within array
+
+
+ fetch(endpoint)
+ .then(blob  =>blob.json())
+ .then(data =>cities.push(...data));
+ //this will just push the data not in the form of an array
+
+
+
+ //function to match the cities names
+ function findMatches(wordToMatch,cities)
+ {
+     return cities.filter(place => {
+        const regex=new RegExp(wordToMatch, 'gi');/*gi means global insensitive i.e it 
+        will check for both lower an upper case*/
+        return place.city.match(regex)  ||place.state.match(regex);  /* it will check if the given word matches
+        with the city or state name*/
+        //it will display the city along with its other data 
+
+     });
+    }
+
+    function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+        function displayMatches(){
+           // console.log(this.value);//it will display whatever is typed in console
+            const matchArray=findMatches(this.value,cities);
+           // console.log(MatchArray);//display the data of the matching city or state
+
+            const html=matchArray.map(place => {
+                const regex=new RegExp(this.value,'gi');
+                const cityName=place.city.replace(regex,`<span class="hl">${this.value}</span>`);
+                //whatever matches will be returned highlighted
+                const stateName=place.state.replace(regex,`<span class="hl">${this.value}</span>`);
+                return `
+                <li>
+                    <span class="name"> ${cityName},${stateName}</span>
+                    <span class="population"> ${numberWithCommas(place.population)}</span>
+                        </li>
+             `;
+
+            }).join('');//using .join to display the items on the screen instead of cnsole
+  
+        suggestions.innerHTML=html;
+        }
+        const searchInput=document.querySelector('.search');
+        const suggestions=document.querySelector('.suggestions');
+        
+        searchInput.addEventListener('change',displayMatches);//to call displayMatches when it is clicked
+        searchInput.addEventListener('keyup',displayMatches);
+     
+ 
+</script>
+
+
+</body>
+</html>
